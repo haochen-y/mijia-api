@@ -210,8 +210,23 @@ class mijiaLogin(object):
         qr = QRCode(border=1, box_size=box_size)
         qr.add_data(loginurl)
         qr.make_image().save('qr.png')
+        qr.make(fit=True)
         try:
-            qr.print_ascii(invert=True, tty=True)
+            # qr.print_ascii(invert=True, tty=True)
+            m = qr.get_matrix()
+            lines=[]
+            for y in range(0, len(m), 2):
+                top = m[y]
+                bot = m[y+1] if y+1 < len(m) else [False]*len(top)
+                line = "".join(
+                    "\u00A0" if not t and not b else
+                    "▀" if t and not b else
+                    "▄" if not t and b else
+                    "█"
+                    for t, b in zip(top, bot)
+                )
+                lines.append(line)
+            logger.info("\n"+"\n".join(lines))
         except OSError:
             qr.print_ascii(invert=True, tty=False)
             logger.info('如果无法扫描二维码，'
