@@ -272,7 +272,7 @@ class mijiaLogin(object):
         loginurl = ret_data['loginUrl']
         self._print_qr(loginurl)
         try:
-            ret = self.session.get(ret_data['lp'], timeout=60, headers={'Connection': 'keep-alive'})
+            ret = self.session.get(ret_data['lp'], timeout=120, headers={'Connection': 'keep-alive'})
         except requests.exceptions.Timeout:
             raise LoginError(-1, '超时，请重试')
         if ret.status_code != 200:
